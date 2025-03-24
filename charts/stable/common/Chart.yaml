@@ -7,7 +7,7 @@ kubeVersion: ">=1.16.0-0"
 keywords:
 - k8s-at-home
 - common
-home: https://github.com/k8s-at-home/library-charts/tree/main/stable/common
+home: https://github.com/roertel/k8s-at-home-library-charts/tree/main/stable/common
 maintainers:
 - name: bjw-s
   email: me@bjw-s.dev
