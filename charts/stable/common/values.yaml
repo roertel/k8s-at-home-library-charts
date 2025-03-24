@@ -87,7 +87,7 @@ automountServiceAccountToken: true
 # Be aware that these values are not encrypted by default, and could therefore visible
 # to anybody with access to the values.yaml file.
 secret: {}
-  # PASSWORD: my-password
+# PASSWORD: my-password
 
 # -- Configure configMaps for the chart here.
 # Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
@@ -102,7 +102,7 @@ configmap:
     annotations: {}
     # -- configMap data content. Helm template enabled.
     data: {}
-      # foo: bar
+    # foo: bar
 
 # -- Main environment variables. Template enabled.
 # Syntax options:
@@ -323,8 +323,8 @@ ingress:
 
     # -- Provide additional annotations which may be required.
     annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
 
     # -- Provide additional labels which may be required.
     labels: {}
@@ -335,25 +335,84 @@ ingress:
 
     ## Configure the hosts for the ingress
     hosts:
-      -  # -- Host address. Helm template can be passed.
-        host: chart-example.local
-        ## Configure the paths for the host
-        paths:
-          -  # -- Path.  Helm template can be passed.
-            path: /
-            # -- Ignored if not kubeVersion >= 1.14-0
-            pathType: Prefix
-            service:
-              # -- Overrides the service name reference for this path
-              name:
-              # -- Overrides the service port reference for this path
-              port:
+    - # -- Host address. Helm template can be passed.
+      host: chart-example.local
+      ## Configure the paths for the host
+      paths:
+      - # -- Path.  Helm template can be passed.
+        path: /
+        # -- Ignored if not kubeVersion >= 1.14-0
+        pathType: Prefix
+        service:
+          # -- Overrides the service name reference for this path
+          name:
+          # -- Overrides the service port reference for this path
+          port:
 
     # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+# -- Configure the HTTP routes for the chart here.
+# Additional routes can be added by adding a dictionary key similar to the 'main' route.
+# @default -- See below
+httproute:
+  main:
+    # -- Enables or disables the httproute
+    enabled: false
+
+    # -- Make this the primary httproute (used in probes, notes, etc...).
+    # If there is more than 1 httproute, make sure that only 1 httproute is marked as primary.
+    primary: true
+
+    # -- Override the name suffix that is used for this httproute.
+    nameOverride:
+
+    # -- Provide additional annotations which may be required.
+    annotations: {}
+    # kubernetes.io/tls-acme: "true"
+
+    # -- Provide additional labels which may be required.
+    labels: {}
+
+    # -- Set the parent refs that is used for this route.
+    # Requires Kubernetes >=1.19
+    parentRefs: []  # "nginx"
+    #- group: ""
+    #  kind: Service
+    #  name: myGateway
+    #  namespace: default
+
+    ## Configure the hostnames for the httproute
+    hostnames:
+    # -- Host address. Helm template can be passed.
+    - chart-example.local
+
+    rules:
+    - backendRefs:
+      - group:
+        kind: Service
+        name:
+        port:
+        weight:
+      matches:
+      - path:
+          type: PathPrefix
+          value: /
+
+      ## Configure the paths for the route
+      paths:
+      - # -- Path.  Helm template can be passed.
+        path: /
+        # -- Ignored if not kubeVersion >= 1.14-0
+        pathType: Prefix
+        service:
+          # -- Overrides the service name reference for this path
+          name:
+          # -- Overrides the service port reference for this path
+          port:
 
 # -- Configure persistence for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
@@ -461,16 +520,16 @@ hostAliases: []
 
 # -- Set the resource requests / limits for the main container.
 resources: {}
-  ## We usually recommend not to specify default resources and to leave this as a conscious
-  ## choice for the user. This also increases chances charts run on environments with little
-  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
-  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+## We usually recommend not to specify default resources and to leave this as a conscious
+## choice for the user. This also increases chances charts run on environments with little
+## resources, such as Minikube. If you do want to specify resources, uncomment the following
+## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
 
 # -- The common chart supports several add-ons. These can be configured under this key.
 # @default -- See below
@@ -531,23 +590,23 @@ addons:
     securityContext:
       capabilities:
         add:
-          - NET_ADMIN
-          - SYS_MODULE
+        - NET_ADMIN
+        - SYS_MODULE
 
     # -- All variables specified here will be added to the vpn sidecar container
     # See the documentation of the VPN image for all config values
     env: {}
-      # TZ: UTC
+    # TZ: UTC
 
     # -- Override the args for the vpn sidecar container
     args: []
 
     # -- Provide a customized vpn configuration file to be used by the VPN.
     configFile:  # |-
-      # Some Example Config
-      # remote greatvpnhost.com 8888
-      # auth-user-pass
-      # Cipher AES
+    # Some Example Config
+    # remote greatvpnhost.com 8888
+    # auth-user-pass
+    # Cipher AES
 
     # -- Reference an existing secret that contains the VPN configuration file
     # The chart expects it to be present under the `vpnConfigfile` key.
@@ -558,27 +617,27 @@ addons:
     scripts:
       # @default -- See below
       up:  # |-
-        # #!/bin/bash
-        # echo "connected" > /shared/vpnstatus
+      # #!/bin/bash
+      # echo "connected" > /shared/vpnstatus
 
       # @default -- See below
       down:  # |-
-        # #!/bin/bash
-        # echo "disconnected" > /shared/vpnstatus
+      # #!/bin/bash
+      # echo "disconnected" > /shared/vpnstatus
 
     additionalVolumeMounts: []
 
     # -- Optionally specify a livenessProbe, e.g. to check if the connection is still
     # being protected by the VPN
     livenessProbe: {}
-      # exec:
-      #   command:
-      #     - sh
-      #     - -c
-      #     - if [ $(curl -s https://ipinfo.io/country) == 'US' ]; then exit 0; else exit $?; fi
-      # initialDelaySeconds: 30
-      # periodSeconds: 60
-      # failureThreshold: 1
+    # exec:
+    #   command:
+    #     - sh
+    #     - -c
+    #     - if [ $(curl -s https://ipinfo.io/country) == 'US' ]; then exit 0; else exit $?; fi
+    # initialDelaySeconds: 30
+    # periodSeconds: 60
+    # failureThreshold: 1
 
     networkPolicy:
       # -- If set to true, will deploy a network policy that blocks all outbound
@@ -599,14 +658,14 @@ addons:
       # [[ref]](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
       # [[recipes]](https://github.com/ahmetb/kubernetes-network-policy-recipes)
       egress:
-        # - to:
-        #   - ipBlock:
-        #       cidr: 0.0.0.0/0
-        #   ports:
-        #   - port: 53
-        #     protocol: UDP
-        #   - port: 53
-        #     protocol: TCP
+      # - to:
+      #   - ipBlock:
+      #       cidr: 0.0.0.0/0
+      #   ports:
+      #   - port: 53
+      #     protocol: UDP
+      #   - port: 53
+      #     protocol: TCP
 
   # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
   # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server)
@@ -625,15 +684,15 @@ addons:
 
     # -- Set any environment variables for code-server here
     env: {}
-      # TZ: UTC
+    # TZ: UTC
 
     # -- Set codeserver command line arguments.
     # Consider setting --user-data-dir to a persistent location to preserve code-server setting changes
     args:
-      - --auth
-      - none
-      # - --user-data-dir
-      # - "/config/.vscode"
+    - --auth
+    - none
+    # - --user-data-dir
+    # - "/config/.vscode"
 
     # -- Specify a list of volumes that get mounted in the code-server container.
     # At least 1 volumeMount is required!
@@ -679,8 +738,8 @@ addons:
       enabled: false
 
       annotations: {}
-        # kubernetes.io/ingress.class: nginx
-        # kubernetes.io/tls-acme: "true"
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
 
       labels: {}
 
@@ -689,11 +748,11 @@ addons:
       ingressClassName:  # "nginx"
 
       hosts:
-        - host: code.chart-example.local
-          paths:
-            - path: /
-              # Ignored if not kubeVersion >= 1.14-0
-              pathType: Prefix
+      - host: code.chart-example.local
+        paths:
+        - path: /
+          # Ignored if not kubeVersion >= 1.14-0
+          pathType: Prefix
       tls: []
       #  - secretName: chart-example-tls
       #    hosts:
@@ -760,4 +819,4 @@ addons:
     securityContext:
       capabilities:
         add:
-          - NET_ADMIN
+        - NET_ADMIN
