@@ -30,4 +30,3 @@ jobs:
         oci_usersname: "${{ github.triggering_actor }}"
         oci_passord: "${{ secrets.GITHUB_TOKEN }}"
         github_token: "${{ secrets.GITHUB_TOKEN }}"
-
