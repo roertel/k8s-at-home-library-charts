@@ -379,11 +379,11 @@ httproute:
 
     # -- Set the parent refs that is used for this route.
     # Requires Kubernetes >=1.19
-    parentRefs: []  # "nginx"
-    #- group: ""
-    #  kind: Service
-    #  name: myGateway
-    #  namespace: default
+    parentRefs: []
+    # - group: ""
+    #   kind: Service
+    #   name: myGateway
+    #   namespace: default
 
     ## Configure the hostnames for the httproute
     hostnames:
