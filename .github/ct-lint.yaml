@@ -2,7 +2,7 @@ remote: origin
 target-branch: main
 helm-extra-args: --timeout 600s
 chart-dirs:
-- charts/incubator
+# - charts/incubator
 - charts/stable
-chart-repos:
-- k8s-at-home-libraries=https://library-charts.k8s-at-home.com
+# chart-repos:
+# - k8s-at-home-libraries=https://library-charts.k8s-at-home.com

@@ -52,7 +52,7 @@ Main entrypoint for the common library chart. It will render all underlying temp
 
   {{ include "common.ingress" .  | nindent 0 }}
 
-  {{ include "common.ingress" .  | nindent 0 }}
+  {{ include "common.httproute" .  | nindent 0 }}
 
   {{- if .Values.secret -}}
     {{ include "common.secret" .  | nindent 0 }}

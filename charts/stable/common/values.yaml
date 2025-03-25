@@ -335,19 +335,18 @@ ingress:
 
     ## Configure the hosts for the ingress
     hosts:
-    - # -- Host address. Helm template can be passed.
-      host: chart-example.local
-      ## Configure the paths for the host
-      paths:
-      - # -- Path.  Helm template can be passed.
-        path: /
-        # -- Ignored if not kubeVersion >= 1.14-0
-        pathType: Prefix
-        service:
+    - paths:
+      - service:
           # -- Overrides the service name reference for this path
           name:
           # -- Overrides the service port reference for this path
           port:
+        # -- Path.  Helm template can be passed.
+        path: /
+        # -- Ignored if not kubeVersion >= 1.14-0
+        pathType: Prefix
+      # -- Host address. Helm template can be passed.
+      host: chart-example.local
 
     # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
     tls: []
@@ -379,11 +378,11 @@ httproute:
 
     # -- Set the parent refs that is used for this route.
     # Requires Kubernetes >=1.19
-    parentRefs: []  # "nginx"
-    #- group: ""
-    #  kind: Service
-    #  name: myGateway
-    #  namespace: default
+    parentRefs: []
+    # - group: ""
+    #   kind: Service
+    #   name: myGateway
+    #   namespace: default
 
     ## Configure the hostnames for the httproute
     hostnames:
@@ -404,15 +403,15 @@ httproute:
 
       ## Configure the paths for the route
       paths:
-      - # -- Path.  Helm template can be passed.
-        path: /
-        # -- Ignored if not kubeVersion >= 1.14-0
-        pathType: Prefix
-        service:
+      - service:
           # -- Overrides the service name reference for this path
           name:
           # -- Overrides the service port reference for this path
           port:
+        # -- Path.  Helm template can be passed.
+        path: /
+        # -- Ignored if not kubeVersion >= 1.14-0
+        pathType: Prefix
 
 # -- Configure persistence for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
