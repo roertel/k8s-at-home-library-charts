@@ -404,15 +404,15 @@ httproute:
 
       ## Configure the paths for the route
       paths:
-      - # -- Path.  Helm template can be passed.
-        path: /
-        # -- Ignored if not kubeVersion >= 1.14-0
-        pathType: Prefix
-        service:
+      - service:
           # -- Overrides the service name reference for this path
           name:
           # -- Overrides the service port reference for this path
           port:
+        # -- Path.  Helm template can be passed.
+        path: /
+        # -- Ignored if not kubeVersion >= 1.14-0
+        pathType: Prefix
 
 # -- Configure persistence for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
