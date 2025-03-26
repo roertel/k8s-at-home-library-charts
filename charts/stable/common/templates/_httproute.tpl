@@ -1,5 +1,5 @@
 {{/* Renders the HTTPRoute objects required by the chart */}}
-{{- define "common.httproute" -}}
+{{- define "httproute" -}}
   {{- /* Generate named HTTP route as required */ -}}
   {{- range $name, $httproute := .Values.httproute }}
     {{- if $httproute.enabled -}}
