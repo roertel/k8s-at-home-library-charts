@@ -31,7 +31,7 @@
   {{- end -}}
 {{- end -}}
 
-{{/* Check Ingress stability */}}
+{{/* Check HTTPRoute stability */}}
 {{- define "common.capabilities.httproute.isStable" -}}
   {{- if eq (include "common.capabilities.httproute.apiVersion" .) "gateway.networking.k8s.io/v1" -}}
     {{- true -}}
