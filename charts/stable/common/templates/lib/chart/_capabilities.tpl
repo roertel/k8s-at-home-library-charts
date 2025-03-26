@@ -25,7 +25,7 @@
 
 {{/* Return the appropriate apiVersion for HTTPRoute objects */}}
 {{- define "common.capabilities.httproute.apiVersion" -}}
-  {{- print "networking.k8s.io/v1" -}}
+  {{- print "gateway.networking.k8s.io/v1" -}}
   {{- if semverCompare "<1.19" (include "common.capabilities.httproute.kubeVersion" .) -}}
     {{- print "beta1" -}}
   {{- end -}}
