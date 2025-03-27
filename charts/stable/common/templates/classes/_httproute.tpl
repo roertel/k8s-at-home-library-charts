@@ -22,7 +22,7 @@ within the common library.
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
     {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
   {{- end -}}
-  {{- $defaultServicePort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
+  {{- $defaultServicePort := get (get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService))) "port" -}}
   {{- $isStable := include "common.capabilities.httproute.isStable" . }}
 ---
 apiVersion: {{ include "common.capabilities.httproute.apiVersion" . }}
@@ -39,16 +39,75 @@ spec:
   {{- if and $isStable $values.httprouteClassName }}
   httprouteClassName: {{ $values.httprouteClassName }}
   {{- end }}
+  {{- if $values.hostnames }}
   hostnames:
   {{- range $values.hostnames }}
-  - {{ . }}
+  - {{ tpl . $ | quote }}
   {{- end }}
+  {{- end }}
+  {{- if $values.parentRefs }}
   parentRefs:
   {{- range $values.parentRefs }}
-  - {{ . }}
+  - name: {{ .name }}
+    {{- if .group }}
+    group: {{ .group }}
+    {{- end }}
+    {{- if .kind }}
+    kind: {{ .kind }}
+    {{- end }}
+    {{- if .namespace }}
+    namespace: {{ .namespace }}
+    {{- end }}
   {{- end }}
+  {{- end }}
+  {{- if $values.rules }}
   rules:
   {{- range $values.rules }}
-  - {{ . }}
+  {{- if .backendRefs }}
+  - backendRefs:
+    {{- range .backendRefs }}
+    {{- $name := $defaultServiceName -}}
+    {{- $port := $defaultServicePort -}}
+    {{- if .name -}}
+      {{- $name = default $name .name -}}
+    {{- end }}
+    {{- if .port -}}
+      {{- $port = default $port .port -}}
+    {{- end }}
+    - name: {{ $name }}
+      port: {{ $port }}
+      {{- if .group }}
+      group: {{ .group }}
+      {{- end }}
+      {{- if .kind }}
+      kind: {{ .kind }}
+      {{- end }}
+      {{- if .weight }}
+      namespace: {{ .weight }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .matches }}
+    {{- if not .backendRefs }}
+  - matches:
+    {{- else }}
+    matches:
+    {{- end }}
+    {{- .matches | toYaml | nindent 4 }}
+    {{- end }}
+
+
+    {{- end }}
   {{- end }}
+#rules:
+#- backendRefs:
+#  - name: $defaultServiceName
+#    group: ""
+#    kind: Service
+#    port: $defaultServicePort
+#    weight: 1
+#  matches:
+#  - path:
+#      type: PathPrefix
+#      value: /
 {{- end }}
