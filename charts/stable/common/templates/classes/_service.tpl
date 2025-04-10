@@ -24,12 +24,14 @@ metadata:
   {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if or (eq ( $primaryPort.protocol | default "" ) "HTTPS") (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
   {{- end }}
   {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{ toYaml . | nindent 4 }}
+  {{- end }}
   {{- end }}
 spec:
   {{- if (or (eq $svcType "ClusterIP") (empty $svcType)) }}
