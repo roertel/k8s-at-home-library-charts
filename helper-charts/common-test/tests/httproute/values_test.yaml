@@ -29,7 +29,7 @@ tests:
       rules:
       - matches:
         - path:
-          value: /test
+            value: /test
   asserts:
   - documentIndex: &HTTPRouteDocument 2
     isKind:
@@ -47,30 +47,30 @@ tests:
   set:
     httproute.main:
       enabled: true
-      hosts:
-      - host: "{{ .Release.Name }}.hostname"
+      hostnames:
+      - "{{ .Release.Name }}.hostname"
   asserts:
   - documentIndex: &HTTPRouteDocument 2
     isKind:
       of: HTTPRoute
   - documentIndex: *HTTPRouteDocument
     equal:
-      path: spec.rules[0].host
+      path: spec.hostnames[0]
       value: RELEASE-NAME.hostname
 
 - it: path with template should pass
   set:
     httproute.main:
       enabled: true
-      hosts:
-      - host: chart-test.local
-        paths:
-        - path: "/{{ .Release.Name }}.path"
+      rules:
+      - matches:
+        - path:
+            value: "/{{ .Release.Name }}.path"
   asserts:
   - documentIndex: &HTTPRouteDocument 2
     isKind:
       of: HTTPRoute
   - documentIndex: *HTTPRouteDocument
     equal:
-      path: spec.rules[0].http.paths[0].path
+      path: spec.rules[0].matches[0].path.value
       value: "/RELEASE-NAME.path"

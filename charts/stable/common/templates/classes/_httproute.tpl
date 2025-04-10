@@ -93,21 +93,9 @@ spec:
     {{- else }}
     matches:
     {{- end }}
-    {{- .matches | toYaml | nindent 4 }}
+    {{- tpl (.matches | toYaml | nindent 4) $ }}
     {{- end }}
-
 
     {{- end }}
   {{- end }}
-#rules:
-#- backendRefs:
-#  - name: $defaultServiceName
-#    group: ""
-#    kind: Service
-#    port: $defaultServicePort
-#    weight: 1
-#  matches:
-#  - path:
-#      type: PathPrefix
-#      value: /
 {{- end }}
