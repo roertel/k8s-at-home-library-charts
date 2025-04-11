@@ -13,4 +13,4 @@ maintainers:
 dependencies:
 - name: common
   repository: file://../../charts/stable/common
-  version: n/a
+  # version: n/a
