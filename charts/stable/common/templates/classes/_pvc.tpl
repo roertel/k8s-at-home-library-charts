@@ -23,12 +23,14 @@ metadata:
   {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if or $values.retain (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
   annotations:
     {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
     {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- toYaml . | nindent 4 }}
+    {{- end }}
     {{- end }}
 spec:
   accessModes:

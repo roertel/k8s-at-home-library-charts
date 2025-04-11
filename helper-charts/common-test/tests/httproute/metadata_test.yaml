@@ -1,0 +1,83 @@
+suite: httproute metadata
+templates:
+- common.yaml
+tests:
+- it: default metadata should pass
+  set:
+    httproute.main.enabled: true
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    isNull:
+      path: metadata.annotations
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: metadata.labels
+      value:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        helm.sh/chart: common-test-0.1.0
+
+- it: custom metadata should pass
+  set:
+    httproute.main:
+      enabled: true
+      annotations:
+        test_annotation: test
+      labels:
+        test_label: test
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: metadata.annotations
+      value:
+        test_annotation: test
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: metadata.labels
+      value:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        helm.sh/chart: common-test-0.1.0
+        test_label: test
+
+- it: custom metadata with global metadata should pass
+  set:
+    global:
+      labels:
+        global_label: test
+      annotations:
+        global_annotation: test
+    httproute.main:
+      enabled: true
+      annotations:
+        test_annotation: test
+      labels:
+        test_label: test
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: metadata.annotations
+      value:
+        global_annotation: test
+        test_annotation: test
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: metadata.labels
+      value:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        global_label: test
+        helm.sh/chart: common-test-0.1.0
+        test_label: test

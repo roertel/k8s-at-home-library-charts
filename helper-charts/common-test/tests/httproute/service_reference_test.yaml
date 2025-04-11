@@ -1,0 +1,52 @@
+suite: httproute service reference
+templates:
+- common.yaml
+tests:
+- it: default should pass
+  set:
+    httproute.main.enabled: true
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].backendRefs[0]
+      value:
+        name: RELEASE-NAME-common-test
+        port: 80
+
+- it: custom service reference should pass
+  set:
+    httproute.main:
+      enabled: true
+      rules:
+      - backendRefs:
+        - name: pathService
+          port: 1234
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].backendRefs[0]
+      value:
+        name: pathService
+        port: 1234
+
+- it: custom service definition should pass
+  set:
+    httproute.main.enabled: true
+    service.main.ports.http.port: 1234
+    service.main.nameOverride: pathService
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].backendRefs[0]
+      value:
+        name: RELEASE-NAME-common-test-pathService
+        port: 1234

@@ -1,0 +1,76 @@
+suite: httproute values
+templates:
+- common.yaml
+tests:
+- it: default should pass
+  set:
+    httproute.main.enabled: true
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.hostnames[0]
+      value: chart-example.local
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].matches[0].path
+      value:
+        type: PathPrefix
+        value: /
+
+- it: custom host and path should pass
+  set:
+    httproute.main:
+      enabled: true
+      hostnames:
+      - chart-test.local
+      rules:
+      - matches:
+        - path:
+            value: /test
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.hostnames[0]
+      value: chart-test.local
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].matches[0].path.value
+      value: /test
+
+- it: host with template should pass
+  set:
+    httproute.main:
+      enabled: true
+      hostnames:
+      - "{{ .Release.Name }}.hostname"
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.hostnames[0]
+      value: RELEASE-NAME.hostname
+
+- it: path with template should pass
+  set:
+    httproute.main:
+      enabled: true
+      rules:
+      - matches:
+        - path:
+            value: "/{{ .Release.Name }}.path"
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].matches[0].path.value
+      value: "/RELEASE-NAME.path"

@@ -1,0 +1,71 @@
+suite: httproute presence
+templates:
+- common.yaml
+tests:
+- it: default should pass
+  asserts:
+  - hasDocuments:
+      count: 2
+  - documentIndex: 0
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 1
+    not: true
+    isKind:
+      of: HTTPRoute
+
+- it: explicitly disabled should pass
+  set:
+    httproute.main.enabled: false
+  asserts:
+  - hasDocuments:
+      count: 2
+  - documentIndex: 0
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 1
+    not: true
+    isKind:
+      of: HTTPRoute
+
+- it: explicitly enabled should pass
+  set:
+    httproute.main.enabled: true
+  asserts:
+  - hasDocuments:
+      count: 3
+  - documentIndex: 0
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 1
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 2
+    isKind:
+      of: HTTPRoute
+
+- it: multiple enabled should pass
+  set:
+    httproute.main.enabled: true
+    httproute.test.enabled: true
+  asserts:
+  - hasDocuments:
+      count: 4
+  - documentIndex: 0
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 1
+    not: true
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: 3
+    isKind:
+      of: HTTPRoute
