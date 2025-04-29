@@ -1,6 +1,6 @@
 # common
 
-![Version: 4.5.8](https://img.shields.io/badge/Version-4.5.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 4.5.9](https://img.shields.io/badge/Version-4.5.9-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -29,7 +29,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: common
-  version: 4.5.8
+  version: 4.5.9
   repository: https://k8s-at-home.com/charts/
 ```
 

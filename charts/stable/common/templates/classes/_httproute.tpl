@@ -50,10 +50,17 @@ spec:
   {{- if $values.parentRefs }}
   parentRefs:
   {{- range $values.parentRefs }}
+  # parentRefs: {{ . | toJson }}
   - name: {{ .name }}
-    {{- if .group }}group: {{ .group }}{{- end }}
-    {{- if .kind }}kind: {{ .kind }}{{- end }}
-    {{- if .namespace }}namespace: {{ .namespace }}{{- end }}
+    {{- if .group }}
+    group: {{ .group }}
+    {{- end }}
+    {{- if .kind }}
+    kind: {{ .kind }}
+    {{- end }}
+    {{- if .namespace }}
+    namespace: {{ .namespace }}
+    {{- end }}
   {{- end }}{{- /* range .parentRefs */}}
   {{- end }}{{- /* if .parentRefs */}}
 
