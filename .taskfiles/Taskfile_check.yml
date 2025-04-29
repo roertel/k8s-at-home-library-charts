@@ -1,0 +1,23 @@
+---
+version: '3'
+
+vars:
+  GIT_ROOT:
+    sh: 'git rev-parse --show-toplevel'
+  GIT_DEFAULT_BRANCH:
+    sh: 'git rev-parse --abbrev-ref HEAD'
+  CHANGED_FILES:
+    # Stores files null-delimited and base64 encoded to avoid issues with special characters
+    sh: 'git diff -z --name-only "{{.GIT_DEFAULT_BRANCH}}" | base64'
+
+tasks:
+  check:
+    desc: Run pre-commit checks
+    cmds:
+    - silent: true
+      cmd: |
+        if [ -n "{{.CHANGED_FILES}}" ]; then
+          base64 -d <<< "{{.CHANGED_FILES}}" | xargs --null pre-commit run --files
+        else
+          pre-commit run --all-files
+        fi

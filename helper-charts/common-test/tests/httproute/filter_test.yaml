@@ -1,0 +1,75 @@
+suite: httproute values
+templates:
+- common.yaml
+tests:
+- it: default should pass
+  set:
+    httproute.main.enabled: true
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.hostnames[0]
+      value: chart-example.local
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].matches[0].path
+      value:
+        type: PathPrefix
+        value: /
+
+- it: standard filter should pass
+  set:
+    httproute:
+      main:
+        enabled: true
+        rules:
+        - filters:
+          - type: RequestRedirect
+            requestRedirect:
+              scheme: https
+              statusCode: 301
+
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+
+  - documentIndex: *HTTPRouteDocument
+    equal:
+      path: spec.rules[0].filters[0]
+      value: 
+        type: RequestRedirect
+        requestRedirect:
+          scheme: https
+          statusCode: 301
+
+- it: extension filter should pass
+  set:
+    httproute:
+      main:
+        enabled: true
+        rules:
+        - filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: test-traefik-middleware
+  asserts:
+  - documentIndex: &HTTPRouteDocument 2
+    isKind:
+      of: HTTPRoute
+  
+  - documentIndex: *HTTPRouteDocument
+    equal: 
+      path: spec.rules[0].filters[0]
+      value:
+        type: ExtensionRef
+        extensionRef:
+          group: traefik.io
+          kind: Middleware
+          name: test-traefik-middleware
+  
