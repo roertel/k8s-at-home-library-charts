@@ -10,7 +10,7 @@ on:
 jobs:
   lint:
     name: Lint charts
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       changed: ${{ steps.list-changed.outputs.changed }}
     steps:
@@ -48,7 +48,7 @@ jobs:
     needs:
     - lint
     name: Run unit tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
     needs:
     - lint
     name: Install charts
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v3
