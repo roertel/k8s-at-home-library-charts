@@ -8,6 +8,7 @@ vars:
 includes:
   deps: .taskfiles/Taskfile_{{OS}}.yml
   chart: .taskfiles/Taskfile_chart.yml
+  check: .taskfiles/Taskfile_check.yml
 
 tasks:
   default:

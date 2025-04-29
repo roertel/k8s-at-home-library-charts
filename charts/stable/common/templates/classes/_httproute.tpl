@@ -39,63 +39,66 @@ spec:
   {{- if and $isStable $values.httprouteClassName }}
   httprouteClassName: {{ $values.httprouteClassName }}
   {{- end }}
+
   {{- if $values.hostnames }}
   hostnames:
   {{- range $values.hostnames }}
   - {{ tpl . $ | quote }}
-  {{- end }}
-  {{- end }}
+  {{- end }}{{- /* range .hostnames */}}
+  {{- end }}{{- /* if .hostnames */}}
+
   {{- if $values.parentRefs }}
   parentRefs:
   {{- range $values.parentRefs }}
   - name: {{ .name }}
-    {{- if .group }}
-    group: {{ .group }}
-    {{- end }}
-    {{- if .kind }}
-    kind: {{ .kind }}
-    {{- end }}
-    {{- if .namespace }}
-    namespace: {{ .namespace }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+    {{- if .group }}group: {{ .group }}{{- end }}
+    {{- if .kind }}kind: {{ .kind }}{{- end }}
+    {{- if .namespace }}namespace: {{ .namespace }}{{- end }}
+  {{- end }}{{- /* range .parentRefs */}}
+  {{- end }}{{- /* if .parentRefs */}}
+
   {{- if $values.rules }}
   rules:
   {{- range $values.rules }}
-  {{- if .backendRefs }}
-  - backendRefs:
+  - {{/* spacer */}}
+
+    {{- if .backendRefs -}}
+    backendRefs:
     {{- range .backendRefs }}
     {{- $name := $defaultServiceName -}}
     {{- $port := $defaultServicePort -}}
-    {{- if .name -}}
-      {{- $name = default $name .name -}}
-    {{- end }}
-    {{- if .port -}}
-      {{- $port = default $port .port -}}
-    {{- end }}
+    {{- if .name -}}{{- $name = default $name .name -}}{{- end }}
+    {{- if .port -}}{{- $port = default $port .port -}}{{- end }}
     - name: {{ $name }}
       port: {{ $port }}
       {{- if .group }}
       group: {{ .group }}
-      {{- end }}
+      {{- end }}{{- /* if .group */}}
       {{- if .kind }}
       kind: {{ .kind }}
-      {{- end }}
+      {{- end }}{{- /* if .kind */}}
       {{- if .weight }}
       namespace: {{ .weight }}
-      {{- end }}
-    {{- end }}
-    {{- end }}
-    {{- if .matches }}
-    {{- if not .backendRefs }}
-  - matches:
-    {{- else }}
-    matches:
-    {{- end }}
-    {{- tpl (.matches | toYaml | nindent 4) $ }}
-    {{- end }}
+      {{- end }}{{- /* if .weight */}}
+    {{- end }}{{- /* range .backRefs */}}
+    {{ end }}{{- /* if .backendRefs */}}
 
-    {{- end }}
-  {{- end }}
-{{- end }}
+    {{- if .matches -}}
+    matches:
+    {{- range .matches }}
+    {{- tpl (. | list | toYaml | nindent 4) $ }}
+    {{/* spacer */}}
+    {{- end }}{{- /* range .matches */}}
+    {{ end }}{{- /* if .matches */}}
+
+    {{- if .filters -}}
+    filters:
+    {{- range .filters }}
+    {{- tpl (. | list | toYaml | nindent 4) $ }}
+    {{/* spacer */}}
+    {{- end }}{{- /* range .filters */}}
+    {{ end }}{{- /* if .filters*/}}
+
+  {{- end }}{{- /* range $values.rules */}}
+  {{- end }}{{- /* if $values.rules */}}
+{{- end }}{{- /* define */}}
