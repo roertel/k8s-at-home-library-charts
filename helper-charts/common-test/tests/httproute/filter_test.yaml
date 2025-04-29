@@ -40,7 +40,7 @@ tests:
   - documentIndex: *HTTPRouteDocument
     equal:
       path: spec.rules[0].filters[0]
-      value: 
+      value:
         type: RequestRedirect
         requestRedirect:
           scheme: https
@@ -62,9 +62,9 @@ tests:
   - documentIndex: &HTTPRouteDocument 2
     isKind:
       of: HTTPRoute
-  
+
   - documentIndex: *HTTPRouteDocument
-    equal: 
+    equal:
       path: spec.rules[0].filters[0]
       value:
         type: ExtensionRef

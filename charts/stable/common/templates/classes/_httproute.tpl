@@ -39,7 +39,7 @@ spec:
   {{- if and $isStable $values.httprouteClassName }}
   httprouteClassName: {{ $values.httprouteClassName }}
   {{- end }}
-  
+
   {{- if $values.hostnames }}
   hostnames:
   {{- range $values.hostnames }}
