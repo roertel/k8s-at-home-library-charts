@@ -72,4 +72,3 @@ tests:
           group: traefik.io
           kind: Middleware
           name: test-traefik-middleware
-  
